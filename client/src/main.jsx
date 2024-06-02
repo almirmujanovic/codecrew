@@ -12,6 +12,8 @@ import JoinProject from "./JoinProject.jsx";
 import Archive from "./Archive.jsx";
 import Navbar from "./components/Navbar.jsx";
 import { AuthProvider } from "./components/AuthContext.jsx";
+import Contact from "./contact.jsx";
+import About from "./About.jsx";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
     path: "/archive",
     element: <Archive />,
   },
+  {
+    path: "/contact",
+    element: <Contact />,
+  },
+  {
+    path: "/about",
+    element: <About />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
