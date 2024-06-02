@@ -18,9 +18,9 @@ import { useAuth } from "./components/AuthContext";
 
 function Archive() {
   const [archivedProjects, setArchivedProjects] = useState([]);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("All");
   const { auth } = useAuth();
-  const { userId } = auth;
+  const { userId, username } = auth;
 
   const fetchProjects = useCallback(async () => {
     try {
@@ -37,11 +37,14 @@ function Archive() {
     fetchProjects();
   }, [fetchProjects]);
 
-  const filters = ["Recent", "My Projects", "Shared with Me"];
-
-  const filteredProjects = archivedProjects.filter((project) =>
-    project.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filteredProjects = archivedProjects.filter((project) => {
+    if (filter === "All") {
+      return true;
+    }
+    return filter === "My Projects"
+      ? project.admin === username
+      : project.admin !== username;
+  });
 
   return (
     <VStack spacing={4} p={8}>
@@ -51,15 +54,24 @@ function Archive() {
         completed.
       </Text>
       <HStack spacing={4}>
-        {filters.map((filterName) => (
-          <Button
-            key={filterName}
-            colorScheme="blue"
-            onClick={() => setFilter(filterName)}
-          >
-            {filterName}
-          </Button>
-        ))}
+        <Button
+          colorScheme={filter === "All" ? "blue" : "gray"}
+          onClick={() => setFilter("All")}
+        >
+          All
+        </Button>
+        <Button
+          colorScheme={filter === "My Projects" ? "blue" : "gray"}
+          onClick={() => setFilter("My Projects")}
+        >
+          My Projects
+        </Button>
+        <Button
+          colorScheme={filter === "Shared with Me" ? "blue" : "gray"}
+          onClick={() => setFilter("Shared with Me")}
+        >
+          Shared with Me
+        </Button>
       </HStack>
       <Input
         placeholder="Filter projects..."

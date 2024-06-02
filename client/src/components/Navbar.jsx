@@ -24,6 +24,13 @@ function Navbar() {
   const { auth, logout } = useAuth();
   const { token, username } = auth;
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <Flex
       as="nav"
@@ -73,7 +80,7 @@ function Navbar() {
             ></MenuButton>
             <Portal>
               <MenuList>
-                <MenuItem onClick={logout}>Logout</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 <MenuItem>
                   <Link href="/archive" style={{ textDecoration: "none" }}>
                     Archive
