@@ -70,13 +70,13 @@ function CodeEditor() {
       setUsers(uniqueUsers);
     });
 
-    socket.current.on("session_ended", () => {
+    const handleNavigation = () => {
       navigate("/");
-    });
+      window.location.reload();
+    };
 
-    socket.current.on("banned", () => {
-      navigate("/");
-    });
+    socket.current.on("session_ended", handleNavigation);
+    socket.current.on("banned", handleNavigation);
 
     socket.current.on("message", (message) => {
       console.log("Received message:", message);
@@ -86,8 +86,8 @@ function CodeEditor() {
     return () => {
       socket.current.off("code_update");
       socket.current.off("users_update");
-      socket.current.off("session_ended");
-      socket.current.off("banned");
+      socket.current.off("session_ended", handleNavigation);
+      socket.current.off("banned", handleNavigation);
       socket.current.off("message");
       socket.current.disconnect();
     };

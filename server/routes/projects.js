@@ -3,6 +3,16 @@ const router = express.Router();
 const pool = require("../db");
 const { v4: uuidv4 } = require("uuid");
 
+const parseDuration = (duration) => {
+  const hoursMatch = duration.match(/(\d+)h/);
+  const minutesMatch = duration.match(/(\d+)m/);
+
+  let hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
+  let minutes = minutesMatch ? parseInt(minutesMatch[1], 10) : 0;
+
+  return `${hours} hours ${minutes} minutes`;
+};
+
 router.post("/create", async (req, res) => {
   const { name, description, type, userId, duration, username } = req.body;
 
@@ -13,6 +23,12 @@ router.post("/create", async (req, res) => {
   const projectId = uuidv4();
 
   console.log("Generated Project UUID: ", projectId);
+
+  let parsedDuration = null;
+
+  if (duration) {
+    parsedDuration = parseDuration(duration);
+  }
 
   try {
     const client = await pool.connect();
@@ -28,7 +44,7 @@ router.post("/create", async (req, res) => {
         name,
         description,
         type,
-        type === "Interview" ? duration : null,
+        type === "Interview" ? parsedDuration : null,
         username,
       ];
 

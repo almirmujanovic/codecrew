@@ -118,7 +118,7 @@ CREATE TABLE public.projects (
     name character varying(255) NOT NULL,
     description text,
     type character varying(50),
-    duration integer,
+    duration interval,
     admin character varying(255),
     language_id integer
 );
@@ -193,36 +193,6 @@ COPY public.languages (id, name) FROM stdin;
 \.
 
 
---
--- Data for Name: project_users; Type: TABLE DATA; Schema: public; Owner: admin
---
-
-COPY public.project_users (user_id, role, projects_id) FROM stdin;
-3	admin	633ff954-371a-4e20-aa3b-2945dab6e7ce
-3	admin	3e540d51-1a58-42db-aa1d-48dd5610bf5e
-2	\N	3e540d51-1a58-42db-aa1d-48dd5610bf5e
-\.
-
-
---
--- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: admin
---
-
-COPY public.projects (project_id, name, description, type, duration, admin, language_id) FROM stdin;
-633ff954-371a-4e20-aa3b-2945dab6e7ce	Test	testing	Normal	\N	Peder	3
-3e540d51-1a58-42db-aa1d-48dd5610bf5e	SEX	YAASSS	Normal	\N	Peder	6
-\.
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: admin
---
-
-COPY public.users (user_id, username, email, password, created_at, updated_at) FROM stdin;
-1	Geto	a@a.com	$2b$10$uyBvL/y/yAJTrcl8o0PQlOHVw0A5ZMkrNfTEUNzG2gEYEUJ5exuBa	2024-05-11 11:29:18.223867+00	2024-05-11 11:29:18.223867+00
-2	Mlinas	b@b.com	$2b$10$hQIPfpUTmqIx3qQL8G1PPuvz4CyTMADe6GKdky5jQNNeKk8FKLzbK	2024-05-11 12:12:37.463925+00	2024-05-11 12:12:37.463925+00
-3	Peder	c@c.com	$2b$10$R1l1.Wfat897i3i53qrB3OEURqtwEkCUewjnvCtuHUz4p.VNRI0gu	2024-05-12 10:57:39.522732+00	2024-05-12 10:57:39.522732+00
-\.
 
 
 --
