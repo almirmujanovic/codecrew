@@ -1,7 +1,6 @@
 const cors = require("cors");
 const users = require("./routes/users");
 const projects = require("./routes/projects");
-const contact = require("./routes/contact"); // Add this line
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
@@ -19,7 +18,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/users", users);
 app.use("/projects", projects);
-app.use("/contact", contact); // Add this line
 
 let rooms = {};
 

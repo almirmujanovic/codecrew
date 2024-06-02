@@ -176,7 +176,7 @@ router.get("/user/:userId/projects", async (req, res) => {
           duration: row.duration,
           admin: row.admin,
           language_name: row.language_name,
-          users: new Map(), // Use a Map to ensure unique users
+          users: new Map(),
         };
       }
       const userKey = `${row.user_id}-${row.username}`;
@@ -188,13 +188,12 @@ router.get("/user/:userId/projects", async (req, res) => {
       }
     });
 
-    // Convert the Map to an array for each project's users
     const response = Object.values(projects).map((project) => {
       project.users = Array.from(project.users.values());
       return project;
     });
 
-    console.log("User Projects: ", response); // For debugging purposes
+    console.log("User Projects: ", response);
 
     res.status(200).json(response);
   } catch (error) {

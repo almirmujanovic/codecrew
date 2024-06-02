@@ -1,75 +1,180 @@
-import React, { useState } from "react";
-import { Container, VStack, Heading, Text, Input, Textarea, Button, Box, Flex, useToast } from "@chakra-ui/react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import {
+  Container,
+  VStack,
+  Heading,
+  Text,
+  Input,
+  Textarea,
+  Button,
+  Box,
+  Flex,
+  useToast,
+} from "@chakra-ui/react";
+import { useForm, ValidationError } from "@formspree/react";
 
 function Contact() {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [state, handleSubmit] = useForm("mrgnwqyn");
   const toast = useToast();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await axios.post("/api/contact", { email, message });
-      if (response.status === 200) {
-        toast({
-          title: "Message sent.",
-          description: "We will get back to you soon.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        setEmail("");
-        setMessage("");
-      } else {
-        throw new Error("Failed to send message");
-      }
-    } catch (error) {
+  useEffect(() => {
+    if (state.succeeded) {
       toast({
-        title: "An error occurred.",
-        description: "Unable to send message. Please try again later.",
-        status: "error",
+        title: "Message sent.",
+        description: "We will get back to you soon.",
+        status: "success",
         duration: 5000,
         isClosable: true,
       });
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+  }, [state.succeeded, toast]);
+
+  if (state.succeeded) {
+    return (
+      <Container maxW="container.md" centerContent>
+        <Heading
+          fontSize="7xl"
+          fontWeight="bold"
+          textAlign="center"
+          color="white"
+        >
+          Thank You for Contacting Us!
+        </Heading>
+      </Container>
+    );
+  }
 
   return (
     <Container maxW="container.md" centerContent>
-      <VStack spacing={5} mt={10} p={5} align="stretch">
-        <Heading fontSize="4xl" fontWeight="bold" textAlign="center">
+      <VStack
+        spacing={8}
+        mt={10}
+        p={8}
+        align="stretch"
+        boxShadow="lg"
+        borderRadius="lg"
+        bg="white"
+      >
+        <Heading
+          fontSize="6xl"
+          fontWeight="bold"
+          textAlign="center"
+          color="black"
+        >
           Contact Us
         </Heading>
-        <Text fontSize="md" textAlign="left">
+        <Text fontSize="md" textAlign="center" color="gray.600">
           We'd love to hear from you! Please fill out the form below to get in
           touch with us.
         </Text>
         <Flex direction={["column", "column", "row"]} spacing={5} width="100%">
-          <VStack as="form" spacing={5} width={["100%", "100%", "50%"]} onSubmit={handleSubmit}>
+          <VStack
+            as="form"
+            spacing={5}
+            width={["100%", "100%", "50%"]}
+            onSubmit={handleSubmit}
+            p={4}
+          >
             <Input
-              placeholder="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="name"
+              type="text"
+              name="name"
+              placeholder="Name"
+              focusBorderColor="black"
+              borderColor="gray.400"
+              size="lg"
               isRequired
+              _placeholder={{ color: "gray.500" }}
+              color="black"
+            />
+            <ValidationError prefix="Name" field="name" errors={state.errors} />
+            <Input
+              id="surname"
+              type="text"
+              name="surname"
+              placeholder="Surname"
+              focusBorderColor="black"
+              borderColor="gray.400"
+              size="lg"
+              isRequired
+              _placeholder={{ color: "gray.500" }}
+              color="black"
+            />
+            <ValidationError
+              prefix="Surname"
+              field="surname"
+              errors={state.errors}
+            />
+            <Input
+              id="phone"
+              type="tel"
+              name="phone"
+              placeholder="Phone"
+              focusBorderColor="black"
+              borderColor="gray.400"
+              size="lg"
+              isRequired
+              _placeholder={{ color: "gray.500" }}
+              color="black"
+            />
+            <ValidationError
+              prefix="Phone"
+              field="phone"
+              errors={state.errors}
+            />
+            <Input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="Email"
+              focusBorderColor="black"
+              borderColor="gray.400"
+              size="lg"
+              isRequired
+              _placeholder={{ color: "gray.500" }}
+              color="black"
+            />
+            <ValidationError
+              prefix="Email"
+              field="email"
+              errors={state.errors}
             />
             <Textarea
+              id="message"
+              name="message"
               placeholder="Your Message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              focusBorderColor="black"
+              borderColor="gray.400"
+              size="lg"
               isRequired
+              _placeholder={{ color: "gray.500" }}
+              color="black"
             />
-            <Button colorScheme="blue" type="submit" isLoading={isSubmitting}>
+            <ValidationError
+              prefix="Message"
+              field="message"
+              errors={state.errors}
+            />
+            <Button
+              colorScheme="blue"
+              type="submit"
+              isLoading={state.submitting}
+              size="lg"
+              width="full"
+            >
               Send Message
             </Button>
           </VStack>
-          <Box height="300px" width={["100%", "100%", "50%"]} bg="gray.300" mt={[5, 5, 0]} ml={[0, 0, 5]}>
+          <Box
+            height="300px"
+            width={["100%", "100%", "50%"]}
+            bg="gray.100"
+            mt={[5, 5, 0]}
+            ml={[0, 0, 5]}
+            borderRadius="lg"
+            overflow="hidden"
+            boxShadow="md"
+          >
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5720.736875007957!2d17.89267169357909!3d44.1994776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475ee24259b7e2c9%3A0xbbbe13ba46b02200!2sCampus%20of%20University%20of%20Zenica!5e0!3m2!1sen!2sba!4v1716986412913!5m2!1sen!2sba"
               width="100%"
